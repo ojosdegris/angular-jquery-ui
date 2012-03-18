@@ -1,7 +1,11 @@
 /* jasmine specs for widgets go here */
 
-describe('widget', function(){
-  var controller, scope, element;
+function compileDrag(compile, scope) {
+  compile('<div jqui-drag-start="start()" jqui-drag-end="end($token)">')(scope);
+}
+
+describe('directives', function(){
+  var controller, directiveScope, element;
   function compile(html){
     scope = angular.compile(html, controller);
     element = scope.$element;
@@ -10,11 +14,11 @@ describe('widget', function(){
   }
 
   beforeEach(function(){
-    controller = {
-        start: jasmine.createSpy('start'),
-        end: jasmine.createSpy('end'),
-        accept: jasmine.createSpy('accept'),
-        commit: jasmine.createSpy('commit')
+    controller = function ($scope) {
+        $scope.start = jasmine.createSpy('start');
+        $scope.end = jasmine.createSpy('end');
+        $scope.accept = jasmine.createSpy('accept');
+        $scope.commit = jasmine.createSpy('commit');
     };
 
     this.addMatchers({
@@ -29,13 +33,14 @@ describe('widget', function(){
 
   });
 
-  describe('jqui:drag-start', function(){
-    beforeEach(function(){
-      compile('<div jqui:drag-start="start()" jqui:drag-end="end($token)">');
-    });
+  describe('jqui-drag-start', function () {
 
-    it('should call drag-start; hold on to taken; call drag-stop; destroy token',function(){
-      controller.start.andReturn('TOKEN');
+    it('should call drag-start; hold on to taken; call drag-stop; destroy token', inject(function ($rootScope, $compile, $controller) {
+      directiveScope = $rootScope.$new();
+      element = compileDrag($compile, directiveScope);
+      var ctrlScope = $rootScope.$new();
+      var ctrl = $controller(controller, {$scope: ctrlScope});
+      ctrlScope.start.andReturn('TOKEN');
 
       element.draggable("option", 'start')();
 
@@ -49,7 +54,7 @@ describe('widget', function(){
       expect(controller.end).toHaveBeenCalledWith('TOKEN');
       expect(element.data('jqui-dnd-item-token')).toEqual(undefined);
       expect(element).not.toHaveClass('jqui-dnd-item-dragging');
-    });
+    }));
   });
 
   describe('jqui:drop-commit', function(){
