@@ -1,19 +1,19 @@
-function DndDemo() {
-  this.list1 = [{name:'one'}, {name:'two'}, {name: 'three', reject: true}, {name: 'four'}];
-  this.list2 = [];
+function DndDemo($scope) {
+  $scope.list1 = [{name:'one'}, {name:'two'}, {name: 'three', reject: true}, {name: 'four'}];
+  $scope.list2 = [];
 
-  this.dragStart = function(item, list){
+  $scope.dragStart = function(item, list){
     item.dragging = '(dragging)';
     return {src: list, item:item};
   };
-  this.dragEnd = function(item){
+  $scope.dragEnd = function(item){
     delete item.dragging;
   };
   
-  this.acceptToken = function(to, token){
+  $scope.acceptToken = function(to, token){
     return token.src != to && !token.item.reject;
   };
-  this.commitToken = function(to, token){
+  $scope.commitToken = function(to, token){
     angular.Array.remove(token.src, token.item);
     to.push(token.item);
   };

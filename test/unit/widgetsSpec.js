@@ -1,17 +1,7 @@
 /* jasmine specs for widgets go here */
 
-function compileDrag(compile, scope) {
-  compile('<div jqui-drag-start="start()" jqui-drag-end="end($token)">')(scope);
-}
-
 describe('directives', function(){
   var controller, directiveScope, element;
-  function compile(html){
-    scope = angular.compile(html, controller);
-    element = scope.$element;
-    scope.$init();
-    scope.$onEval("evalCount = evaleCount + 1");
-  }
 
   beforeEach(function(){
     controller = function ($scope) {
@@ -32,6 +22,10 @@ describe('directives', function(){
     });
 
   });
+
+  function compileDrag(compile, scope) {
+    compile('<div jqui-drag-start="start()" jqui-drag-end="end($token)">')(scope);
+  }
 
   describe('jqui-drag-start', function () {
 
