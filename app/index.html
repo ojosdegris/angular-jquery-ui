@@ -10,10 +10,9 @@
   <script src="js/controllers.js"></script>
   <script src="js/jquery-ui-widgets.js"></script>
 </head>
-<body ng-app="DndDemo" style="display:none" ng-show="true">
+<body ng-app="jquiModule" ng-controller="DndDemo" style="display:none" ng-show="true">
 
-  <h1>jQuery UI Drag and Drop Demo</h1>
-
+<h1>jQuery UI Drag and Drop Demo</h1>
   <div jqui-drop-accept="acceptToken(list1, $token)"
        jqui-drop-commit="commitToken(list1, $token)">
     <h2>Drag these boxes</h2>
@@ -29,6 +28,9 @@
          jqui-drag-start="dragStart(item, list2)"
          jqui-drag-end="dragEnd(item)">{{item.name}} {{item.dragging}}</div>
   </div>
-
+<div>
+list1: {{list1}}<br>
+list2: {{list2}}<br>
+</div>
 </body>
 </html>

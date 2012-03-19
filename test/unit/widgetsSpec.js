@@ -29,7 +29,7 @@ describe('directives', function(){
 
   describe('jqui-drag-start', function () {
 
-    it('should call drag-start; hold on to taken; call drag-stop; destroy token', inject(function ($rootScope, $compile, $controller) {
+    it('should call drag-start; hold on to token; call drag-stop; destroy token', inject(function ($rootScope, $compile, $controller) {
       directiveScope = $rootScope.$new();
       element = compileDrag($compile, directiveScope);
       var ctrlScope = $rootScope.$new();

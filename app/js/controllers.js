@@ -9,12 +9,17 @@ function DndDemo($scope) {
   $scope.dragEnd = function(item){
     delete item.dragging;
   };
-  
+
   $scope.acceptToken = function(to, token){
     return token.src != to && !token.item.reject;
   };
+
+  function removeItemFromArray(item, array) {
+    array.splice(array.indexOf(item), 1);
+  }
+
   $scope.commitToken = function(to, token){
-    angular.Array.remove(token.src, token.item);
+    removeItemFromArray(token.item, token.src);
     to.push(token.item);
   };
 }

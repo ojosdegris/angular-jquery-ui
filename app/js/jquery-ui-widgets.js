@@ -6,25 +6,24 @@
     return function(token){
       var old = scope.hasOwnProperty(property) ? scope[property] : undefined;
       scope[property] = token;
-      var retVal = scope.$tryEval(exp, element);
+      var retVal = scope.$apply(exp);
       scope[property] = old;
       return retVal;
     };
   };
 
-  angular.module("jquery-ui", [])
-    .directive('jqui-drag-start', function ($compile) {
+  angular.module("jquiModule", [])
+    .directive('jquiDragStart', function ($compile, $rootScope) {
       return {
-        scope:{
-//        var dragStartExp = item.attr('jqui-drag-start') || '';
-//        var dragEndExp = item.attr('jqui-drag-end') || '';
-//        var handle = item.attr('jqui-handle') || false;
-//        var axisExp = item.attr('jqui-axis');
-        },
         link:function (scope, item, attrs) {
+          var dragStartExp = attrs.jquiDragStart || '';
+          var dragEndExp = attrs.jquiDragEnd || '';
+          var handle = attrs.jquiHandle || false;
+          var axisExp = attrs.jquiAxis;
+
           item.addClass('jqui-dnd-item');
 
-          var $updateView = scope.$root.$eval;
+          var $updateView = $rootScope.$eval;
           var dragStart = applyFn(item, scope, dragStartExp);
           var dragEnd = applyFn(item, scope, dragEndExp);
           var token;
@@ -58,15 +57,14 @@
       }
     })
 
-    .directive('jqui-drop-commit', function ($compile) {
+    .directive('jquiDropCommit', function ($compile, $rootScope) {
       return {
-        scope:{
-//        var acceptExp = target.attr('jqui-drop-accept') || '';
-//        var commitExp = target.attr('jqui-drop-commit') || '';
-        },
         link:function (scope, target, attrs) {
+          var acceptExp = attrs.jquiDropAccept || '';
+          var commitExp = attrs.jquiDropCommit || '';
+
           target.addClass('jqui-dnd-target');
-          var $updateView = scope.$root.$eval;
+          var $updateView = $rootScope.$eval;
           var accept = applyFn(target, scope, acceptExp);
           var commit = applyFn(target, scope, commitExp);
 
@@ -101,7 +99,7 @@
                 commit(ui.draggable.data('jqui-dnd-item-token'));
                 ui.draggable.draggable('option', 'revertDuration', 0);
                 ui.draggable.css({top:'', left:''});
-                ui.draggable.draggable('option', 'stop')();
+                ui.draggable.draggable('option', 'stop')(); //TODO: Not working
               }
               target.removeClass('jqui-dnd-target-active');
               target.removeClass('jqui-dnd-target-disable');
