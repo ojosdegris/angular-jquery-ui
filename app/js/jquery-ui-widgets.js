@@ -12,50 +12,51 @@
     };
   };
 
-  angular.module("jquery-ui", []).directive('jqui-drag-start', function ($compile) {
-    return {
-      scope:{
+  angular.module("jquery-ui", [])
+    .directive('jqui-drag-start', function ($compile) {
+      return {
+        scope:{
 //        var dragStartExp = item.attr('jqui-drag-start') || '';
 //        var dragEndExp = item.attr('jqui-drag-end') || '';
 //        var handle = item.attr('jqui-handle') || false;
 //        var axisExp = item.attr('jqui-axis');
-      },
-      link:function (scope, item, attrs) {
-        item.addClass('jqui-dnd-item');
+        },
+        link:function (scope, item, attrs) {
+          item.addClass('jqui-dnd-item');
 
-        var $updateView = scope.$root.$eval;
-        var dragStart = applyFn(item, scope, dragStartExp);
-        var dragEnd = applyFn(item, scope, dragEndExp);
-        var token;
+          var $updateView = scope.$root.$eval;
+          var dragStart = applyFn(item, scope, dragStartExp);
+          var dragEnd = applyFn(item, scope, dragEndExp);
+          var token;
 
-        item.draggable({
-          addClass:false,
-          handle:handle,
-          start:function (event, ui) {
-            item.draggable('option', 'revertDuration', 200);
-            item.addClass('jqui-dnd-item-dragging');
-            item.data('jqui-dnd-item-token', token = dragStart());
-            $updateView();
-          },
-          stop:function () {
-            item.removeClass('jqui-dnd-item-dragging');
-            item.removeClass('jqui-dnd-item-over');
-            item.removeData('jqui-dnd-item-token');
-            dragEnd(token);
-            token = null;
-            $updateView();
-          },
-          revert:true
-        });
-
-        if (axisExp) {
-          scope.$watch(axisExp, function (newValue) {
-            item.draggable('option', 'axis', newValue);
+          item.draggable({
+            addClass:false,
+            handle:handle,
+            start:function (event, ui) {
+              item.draggable('option', 'revertDuration', 200);
+              item.addClass('jqui-dnd-item-dragging');
+              item.data('jqui-dnd-item-token', token = dragStart());
+              $updateView();
+            },
+            stop:function () {
+              item.removeClass('jqui-dnd-item-dragging');
+              item.removeClass('jqui-dnd-item-over');
+              item.removeData('jqui-dnd-item-token');
+              dragEnd(token);
+              token = null;
+              $updateView();
+            },
+            revert:true
           });
+
+          if (axisExp) {
+            scope.$watch(axisExp, function (newValue) {
+              item.draggable('option', 'axis', newValue);
+            });
+          }
         }
       }
-    }
-  })
+    })
 
     .directive('jqui-drop-commit', function ($compile) {
       return {
