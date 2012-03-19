@@ -1,19 +1,19 @@
 /* http://docs.angularjs.org/#!angular.widget */
 
 (function(){
-  function applyFn(element, scope, exp, property){
+  function evalFn(element, scope, exp, property){
     property = property || '$token';
     return function(token){
       var old = scope.hasOwnProperty(property) ? scope[property] : undefined;
       scope[property] = token;
-      var retVal = scope.$apply(exp);
+      var retVal = scope.$eval(exp, element);
       scope[property] = old;
       return retVal;
     };
   };
 
   angular.module("jquiModule", [])
-    .directive('jquiDragStart', function ($compile, $rootScope) {
+    .directive('jquiDragStart', function ($compile) {
       return {
         link:function (scope, item, attrs) {
           var dragStartExp = attrs.jquiDragStart || '';
@@ -23,9 +23,8 @@
 
           item.addClass('jqui-dnd-item');
 
-          var $updateView = $rootScope.$eval;
-          var dragStart = applyFn(item, scope, dragStartExp);
-          var dragEnd = applyFn(item, scope, dragEndExp);
+          var dragStart = evalFn(item, scope, dragStartExp);
+          var dragEnd = evalFn(item, scope, dragEndExp);
           var token;
 
           item.draggable({
@@ -35,15 +34,14 @@
               item.draggable('option', 'revertDuration', 200);
               item.addClass('jqui-dnd-item-dragging');
               item.data('jqui-dnd-item-token', token = dragStart());
-              $updateView();
             },
             stop:function () {
               item.removeClass('jqui-dnd-item-dragging');
               item.removeClass('jqui-dnd-item-over');
               item.removeData('jqui-dnd-item-token');
               dragEnd(token);
+              scope.$apply();
               token = null;
-              $updateView();
             },
             revert:true
           });
@@ -57,16 +55,15 @@
       }
     })
 
-    .directive('jquiDropCommit', function ($compile, $rootScope) {
+    .directive('jquiDropCommit', function ($compile) {
       return {
         link:function (scope, target, attrs) {
           var acceptExp = attrs.jquiDropAccept || '';
           var commitExp = attrs.jquiDropCommit || '';
 
           target.addClass('jqui-dnd-target');
-          var $updateView = $rootScope.$eval;
-          var accept = applyFn(target, scope, acceptExp);
-          var commit = applyFn(target, scope, commitExp);
+          var accept = evalFn(target, scope, acceptExp);
+          var commit = evalFn(target, scope, commitExp);
 
           target.droppable({
             addClass:false,
@@ -77,7 +74,6 @@
               } else {
                 target.addClass('jqui-dnd-target-disable');
               }
-              $updateView();
             },
             deactivate:function () {
               target.removeClass('jqui-dnd-target-active');
@@ -104,7 +100,6 @@
               target.removeClass('jqui-dnd-target-active');
               target.removeClass('jqui-dnd-target-disable');
               target.removeClass('jqui-dnd-target-over');
-              $updateView();
             }
           });
         }
