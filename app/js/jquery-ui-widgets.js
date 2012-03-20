@@ -34,6 +34,7 @@
               item.draggable('option', 'revertDuration', 200);
               item.addClass('jqui-dnd-item-dragging');
               item.data('jqui-dnd-item-token', token = dragStart());
+              scope.$apply();
             },
             stop:function () {
               item.removeClass('jqui-dnd-item-dragging');
