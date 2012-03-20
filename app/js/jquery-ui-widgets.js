@@ -75,6 +75,7 @@
               } else {
                 target.addClass('jqui-dnd-target-disable');
               }
+              scope.$apply();
             },
             deactivate:function () {
               target.removeClass('jqui-dnd-target-active');
@@ -96,7 +97,7 @@
                 commit(ui.draggable.data('jqui-dnd-item-token'));
                 ui.draggable.draggable('option', 'revertDuration', 0);
                 ui.draggable.css({top:'', left:''});
-                ui.draggable.draggable('option', 'stop')(); //TODO: Not working
+                ui.draggable.draggable('option', 'stop')();
               }
               target.removeClass('jqui-dnd-target-active');
               target.removeClass('jqui-dnd-target-disable');

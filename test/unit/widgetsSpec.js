@@ -31,8 +31,7 @@ describe('directives', function(){
       $scope.commit = jasmine.createSpy('commit');
     };
     var ctrl = $controller(controller, {$scope:scope});
-    scope.evalCount = 0;
-    scope.$watch(angular.noop,
+    scope.$watch(
       function () {
         scope.evalCount = scope.evalCount + 1;
       });
@@ -78,6 +77,7 @@ describe('directives', function(){
 
       element =
         compile('<div jqui-drop-commit="commit($token)" jqui-drop-accept="accept($token)">')(scope);
+      scope.evalCount = 0;
     }
 
     it('should accept dragging when active', inject(function ($rootScope, $compile, $controller) {
