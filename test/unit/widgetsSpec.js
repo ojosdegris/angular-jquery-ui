@@ -31,6 +31,11 @@ describe('directives', function(){
       $scope.commit = jasmine.createSpy('commit');
     };
     var ctrl = $controller(controller, {$scope:scope});
+    scope.evalCount = 0;
+    scope.$watch(angular.noop,
+      function () {
+        scope.evalCount = scope.evalCount + 1;
+      });
   }
 
   describe('jqui-drag-start', function () {
@@ -59,11 +64,6 @@ describe('directives', function(){
   describe('jqui-drop-commit', function(){
     var ui;
 
-    function compileAndListen(compile, html) {
-      element = compile(html)(scope);
-//      scope.$onEval("evalCount = evalCount + 1")
-    }
-
     function initScopeCtrlUiAndCompile(rootScope, controller, compile) {
       initScopeAndCtrl(rootScope, controller);
       ui = {
@@ -76,17 +76,18 @@ describe('directives', function(){
         })()
       };
 
-      compileAndListen(compile,'<div jqui-drop-commit="commit($token)" jqui-drop-accept="accept($token)">');
+      element =
+        compile('<div jqui-drop-commit="commit($token)" jqui-drop-accept="accept($token)">')(scope);
     }
 
     it('should accept dragging when active', inject(function ($rootScope, $compile, $controller) {
       initScopeCtrlUiAndCompile($rootScope, $controller, $compile);
-      compileAndListen($compile, '<div jqui-drop-commit="commit($token)">');
+      element = $compile('<div jqui-drop-commit="commit($token)">')(scope);
       element.addClass('jqui-dnd-target-active');
       element.droppable("option", "drop")(event, ui);
       expect(scope.commit).toHaveBeenCalledWith("TOKEN");
       expect(scope.end).toHaveBeenCalledWith("TOKEN");
-//      expect(scope.evalCount).toEqual(1);
+      expect(scope.evalCount).toEqual(1);
     }));
 
     it('should not accept dragging when not active', inject(function ($rootScope, $compile, $controller) {
@@ -102,7 +103,7 @@ describe('directives', function(){
       expect(scope.accept).toHaveBeenCalledWith("TOKEN");
       expect(element).toHaveClass('jqui-dnd-target-disable');
       expect(element).not.toHaveClass('jqui-dnd-target-active');
-//      expect(scope.evalCount).toEqual(1);
+      expect(scope.evalCount).toEqual(1);
     }));
 
     it('should activate', inject(function ($rootScope, $compile, $controller) {
@@ -112,7 +113,7 @@ describe('directives', function(){
       expect(scope.accept).toHaveBeenCalledWith("TOKEN");
       expect(element).not.toHaveClass('jqui-dnd-target-disable');
       expect(element).toHaveClass('jqui-dnd-target-active');
-//      expect(scope.evalCount).toEqual(1);
+      expect(scope.evalCount).toEqual(1);
     }));
 
     it('should change over/out CSS when active', inject(function ($rootScope, $compile, $controller) {
@@ -152,7 +153,7 @@ describe('directives', function(){
       expect(element).not.toHaveClass('jqui-dnd-target-active');
       expect(element).not.toHaveClass('jqui-dnd-target-disable');
       expect(element).not.toHaveClass('jqui-dnd-target-over');
-//      expect(scope.evalCount).toEqual(1);
+      expect(scope.evalCount).toEqual(1);
     }));
   });
 });
