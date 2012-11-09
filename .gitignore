@@ -7,3 +7,5 @@ build.xml
 .settings
 .externalToolBuilders
 .idea
+log/*
+logs/*
